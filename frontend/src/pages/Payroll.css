@@ -1,10 +1,11 @@
+/* Page Container */
 .payroll-page {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #f8f9fc;
+  border-radius: 14px;
+  padding: 2.5rem;
 }
 
+/* Header */
 .payroll-header {
   display: flex;
   justify-content: space-between;
@@ -15,21 +16,27 @@
 }
 
 .payroll-header h1 {
-  color: #333;
+  color: #2d2f36;
   margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
 }
 
+/* Employee Selector */
 .employee-select {
   padding: 10px 16px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 16px;
-  min-width: 250px;
+  border: 1px solid #e0e4ef;
+  border-radius: 8px;
+  font-size: 15px;
+  min-width: 260px;
+  background: white;
 }
 
+/* Payroll List */
 .payrolls-list h2 {
-  color: #333;
+  color: #2d2f36;
   margin-bottom: 1.5rem;
+  font-weight: 600;
 }
 
 .payrolls-table-container {
@@ -39,96 +46,108 @@
 .payrolls-table {
   width: 100%;
   border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .payrolls-table thead {
-  background: #f8f9fa;
+  background: #f1f3f9;
 }
 
 .payrolls-table th,
 .payrolls-table td {
   padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid #e6e9f0;
 }
 
 .payrolls-table th {
-  font-weight: 600;
-  color: #666;
+  font-size: 0.85rem;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .no-data {
   text-align: center;
-  color: #999;
+  color: #9ca3af;
   padding: 3rem;
 }
 
+/* Payroll Details */
 .payroll-details {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
+/* Info Header */
 .payroll-info-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #667eea;
+  border-bottom: 1px solid #e6e9f0;
   gap: 1rem;
 }
 
 .payroll-info-header h2 {
-  color: #333;
+  color: #2d2f36;
   margin: 0;
+  font-weight: 600;
 }
 
+/* Read Only Badge */
 .read-only-badge {
-  background: #ffc107;
-  color: #333;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
+  background: #fef3c7;
+  color: #92400e;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
   font-weight: 600;
-  white-space: nowrap;
 }
 
+/* Error */
 .error-message {
-  background: #f8d7da;
-  color: #721c24;
+  background: #fee2e2;
+  color: #991b1b;
   padding: 1rem;
-  border-radius: 6px;
+  border-radius: 8px;
   margin-bottom: 1.5rem;
-  border: 1px solid #f5c6cb;
+  border: 1px solid #fecaca;
 }
 
-.loading-container,
-.no-data-container {
-  text-align: center;
-  padding: 3rem;
-  color: #666;
-}
-
-.total-cell {
-  font-weight: 600;
-  color: #667eea;
-}
-
+/* Salary Form */
 .salary-form {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  align-items: center; /* prevent full-width submit */
 }
 
+/* Save Changes button */
+.salary-form button[type="submit"] {
+  width: auto;
+  min-width: 140px;
+  padding: 7px 16px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+/* Form Section */
 .form-section {
-  background: #f8f9fa;
+  background: white;
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 14px;
+  border: 1px solid #e6e9f0;
+  width: 100%;
 }
 
 .form-section h3 {
-  color: #333;
+  color: #2d2f36;
   margin-bottom: 1.5rem;
+  font-weight: 600;
 }
 
 .form-row {
@@ -144,32 +163,36 @@
 }
 
 .form-group label {
-  margin-bottom: 0.5rem;
-  color: #555;
+  margin-bottom: 0.4rem;
+  color: #4b5563;
   font-weight: 500;
 }
 
 .form-group input {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 16px;
+  padding: 10px 12px;
+  border: 1px solid #e0e4ef;
+  border-radius: 8px;
+  font-size: 15px;
 }
 
+/* Total Display */
 .total-display {
   margin-top: 1.5rem;
   padding: 1rem;
-  background: white;
-  border-radius: 6px;
-  font-size: 1.25rem;
-  color: #667eea;
+  background: #eef2ff;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  color: #4338ca;
   text-align: center;
+  font-weight: 600;
 }
 
+/* Salary Details View */
 .salary-details {
-  background: #f8f9fa;
+  background: white;
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 14px;
+  border: 1px solid #e6e9f0;
 }
 
 .salary-breakdown {
@@ -183,55 +206,71 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background: white;
-  border-radius: 8px;
-}
-
-.salary-item.total {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  font-size: 1.25rem;
-  font-weight: bold;
+  background: #f9fafb;
+  border-radius: 10px;
 }
 
 .salary-label {
   font-weight: 500;
-  color: #666;
-}
-
-.salary-item.total .salary-label {
-  color: white;
+  color: #4b5563;
 }
 
 .salary-value {
   font-weight: 600;
-  color: #333;
-  font-size: 1.1rem;
+  color: #111827;
 }
 
+/* Total Salary Highlight */
+.salary-item.total {
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+}
+
+.salary-item.total .salary-label,
 .salary-item.total .salary-value {
-  color: white;
-  font-size: 1.5rem;
+  color: #4338ca;
+  font-size: 1.2rem;
+  font-weight: 700;
 }
 
+/* Buttons */
 .btn-primary,
 .btn-small {
-  padding: 10px 20px;
-  border: none;
+  padding: 6px 14px;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
+  border: 1px solid #667eea;
   background: #667eea;
   color: white;
+  display: inline-flex;      /* 🔒 prevents stretching */
+  align-items: center;
+  justify-content: center;
+  width: auto;               /* 🔒 hard stop on full-width */
+  max-width: max-content;
+  transition: all 0.2s ease;
 }
 
+.btn-small {
+  padding: 5px 12px;
+  font-size: 12.5px;
+}
+
+/* Header Edit / Cancel button */
+.payroll-info-header .btn-primary {
+  padding: 6px 12px;
+  font-size: 13px;
+  align-self: center;
+}
+
+/* Hover */
 .btn-primary:hover,
 .btn-small:hover {
   background: #5568d3;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .payroll-header {
     flex-direction: column;
@@ -248,8 +287,7 @@
 
   .payroll-info-header {
     flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
 }
-

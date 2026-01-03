@@ -19,6 +19,34 @@ router.get('/employees', auth, isAdmin, async (req, res) => {
   }
 });
 
+// Terminate Employee
+router.delete('/employees/:id', auth, isAdmin, async (req, res) => {
+  try {
+    const employeeId = req.params.id;
+
+    // Check if employee exists
+    const employee = await User.findById(employeeId);
+    if (!employee) {
+      return res.status(404).json({ message: 'Employee not found' });
+    }
+
+    // Prevent terminating admin/HR
+    if (employee.role === 'Admin' || employee.role === 'HR') {
+      return res.status(403).json({ message: 'Cannot terminate Admin or HR users' });
+    }
+
+    // Delete all related data
+    await Attendance.deleteMany({ employeeId });
+    await Leave.deleteMany({ employeeId });
+    await User.findByIdAndDelete(employeeId);
+
+    res.json({ message: 'Employee terminated successfully' });
+  } catch (error) {
+    console.error('Terminate employee error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Get Dashboard Stats
 router.get('/dashboard-stats', auth, isAdmin, async (req, res) => {
   try {

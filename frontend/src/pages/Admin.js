@@ -31,6 +31,19 @@ const Admin = () => {
     }
   };
 
+  const handleTerminate = async (employeeId, employeeName) => {
+    if (window.confirm(`Are you sure you want to terminate ${employeeName}? This action cannot be undone and will remove all employee data.`)) {
+      try {
+        await api.delete(`/admin/employees/${employeeId}`);
+        alert('Employee terminated successfully');
+        fetchData(); // Refresh the list
+      } catch (error) {
+        console.error('Error terminating employee:', error);
+        alert(error.response?.data?.message || 'Error terminating employee');
+      }
+    }
+  };
+
   if (loading) {
     return (
       <Layout>
@@ -125,6 +138,12 @@ const Admin = () => {
                             className="btn-small"
                           >
                             Attendance
+                          </button>
+                          <button
+                            onClick={() => handleTerminate(emp._id, `${emp.profile?.firstName} ${emp.profile?.lastName}`)}
+                            className="btn-small btn-danger"
+                          >
+                            Terminate
                           </button>
                         </div>
                       </td>

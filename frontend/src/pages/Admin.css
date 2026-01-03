@@ -106,6 +106,16 @@
   background: #5568d3;
 }
 
+.btn-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.btn-danger:hover {
+  background: #dc3545;
+  color: white;
+}
+
 @media (max-width: 768px) {
   .action-buttons {
     flex-direction: column;
