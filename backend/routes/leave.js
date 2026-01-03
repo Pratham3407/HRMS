@@ -58,23 +58,29 @@ router.post('/apply', auth, async (req, res) => {
     await leave.populate('employeeId', 'employeeId email profile.firstName profile.lastName');
 
     // Send email to HR/Admins
-    const admins = await User.find({ role: { $in: ['Admin', 'HR'] } }, 'email');
-    const adminEmails = admins.map(admin => admin.email);
-    
-    if (adminEmails.length > 0) {
-      const subject = 'New Leave Request Submitted - Dayflow HRMS';
-      const html = `
-        <h2>New Leave Request</h2>
-        <p><strong>Employee:</strong> ${leave.employeeId.profile.firstName} ${leave.employeeId.profile.lastName} (${leave.employeeId.employeeId})</p>
-        <p><strong>Leave Type:</strong> ${leave.leaveType}</p>
-        <p><strong>Date Range:</strong> ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()}</p>
-        <p><strong>Total Days:</strong> ${leave.totalDays}</p>
-        <p><strong>Remarks:</strong> ${leave.remarks || 'None'}</p>
-        <p>Please review and approve/reject the request in the HRMS dashboard.</p>
-      `;
-      
-      await sendEmail(adminEmails.join(','), subject, html);
-    }
+    const admins = await User.find(
+  { role: { $in: ['Admin', 'HR', 'admin', 'hr'] }, email: { $exists: true, $ne: '' } },
+  'email'
+);
+
+const adminEmails = admins.map(a => a.email).filter(Boolean);
+
+if (adminEmails.length > 0) {
+  await sendEmail({
+    to: adminEmails.join(','),
+    subject: 'New Leave Request Submitted - Dayflow HRMS',
+    html: `
+      <h2>New Leave Request</h2>
+      <p><strong>Employee:</strong> ${leave.employeeId.profile.firstName} ${leave.employeeId.profile.lastName} (${leave.employeeId.employeeId})</p>
+      <p><strong>Leave Type:</strong> ${leave.leaveType}</p>
+      <p><strong>Date Range:</strong> ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()}</p>
+      <p><strong>Total Days:</strong> ${leave.totalDays}</p>
+      <p><strong>Remarks:</strong> ${leave.remarks || 'None'}</p>
+      <p>Please review and approve/reject the request in the HRMS dashboard.</p>
+    `,
+  });
+}
+
 
     res.status(201).json({ message: 'Leave request submitted successfully', leave });
   } catch (error) {
@@ -206,7 +212,14 @@ router.put('/:id/approve', auth, isAdmin, async (req, res) => {
       <p>Approved by: ${leave.approvedBy.profile.firstName} ${leave.approvedBy.profile.lastName}</p>
     `;
     
-    await sendEmail(employeeEmail, subject, html);
+    if (employeeEmail) {
+  await sendEmail({
+    to: employeeEmail,
+    subject,
+    html,
+  });
+}
+
 
     res.json({ message: `Leave request ${status.toLowerCase()} successfully`, leave });
   } catch (error) {

@@ -1,62 +1,58 @@
 ﻿const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-// Generate verification token
-const generateVerificationToken = () => {
-  return crypto.randomBytes(32).toString('hex');
-};
+// Generate secure token
+const generateVerificationToken = () =>
+  crypto.randomBytes(32).toString('hex');
 
-// Create transporter
-const createTransporter = () => {
-  // For development, use Ethereal (fake SMTP)
-  // In production, configure with real SMTP
-  return nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.ETHEREAL_USER || 'your-ethereal-user',
-      pass: process.env.ETHEREAL_PASS || 'your-ethereal-pass'
-    }
+// Create REAL transporter
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: process.env.EMAIL_SECURE === 'true',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  }
+});
+
+// Verify SMTP once on server start
+transporter.verify((err) => {
+  if (err) {
+    console.error('SMTP ERROR:', err);
+  } else {
+    console.log('SMTP server ready to send emails');
+  }
+});
+
+// Generic email sender
+const sendEmail = async ({ to, subject, html }) => {
+  return transporter.sendMail({
+    from: process.env.EMAIL_FROM,
+    to,
+    subject,
+    html,
   });
 };
 
-// Send general email
-const sendEmail = async (to, subject, html) => {
-  try {
-    const transporter = createTransporter();
-
-    const mailOptions = {
-      from: process.env.EMAIL_FROM || 'noreply@dayflowhrms.com',
-      to,
-      subject,
-      html
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent:', info.messageId);
-    console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
-
-    return info;
-  } catch (error) {
-    console.error('Email send error:', error);
-    // Don't throw, just log for now
-  }
-};
-
-// Send verification email
+// Verification email
 const sendVerificationEmail = async (email, token) => {
-  const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/verify-email/${token}`;
-  
-  const subject = 'Email Verification - Dayflow HRMS';
-  const html = `
-    <h2>Please verify your email address</h2>
-    <p>Click on the following link to verify your email:</p>
-    <a href="${verificationUrl}">${verificationUrl}</a>
-    <p>This link will expire in 24 hours.</p>
-  `;
+  const url = `${process.env.FRONTEND_URL}/verify-email/${token}`;
 
-  return await sendEmail(email, subject, html);
+  return sendEmail({
+    to: email,
+    subject: 'Verify your email – Dayflow HRMS',
+    html: `
+      <h2>Verify your email</h2>
+      <p>Please verify your Dayflow account:</p>
+      <a href="${url}">${url}</a>
+      <p>This link expires in 24 hours.</p>
+    `,
+  });
 };
 
-module.exports = { generateVerificationToken, sendEmail, sendVerificationEmail };
+module.exports = {
+  generateVerificationToken,
+  sendEmail,
+  sendVerificationEmail,
+};
