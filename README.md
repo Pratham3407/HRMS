@@ -1,70 +1,286 @@
-# Getting Started with Create React App
+# Dayflow HRMS
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive Human Resource Management System (HRMS) built with React for the frontend and Node.js/Express for the backend. This application provides a complete solution for managing employees, attendance, leave requests, payroll, and more.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+- **User Authentication**: Secure sign-up and sign-in with JWT tokens and email verification
+- **Role-Based Access Control**: Different permissions for Employees, HR, and Admins
+- **Employee Management**: Complete profile management with photo and document uploads
+- **Attendance Tracking**: Daily check-in/check-out functionality with detailed reports
+- **Leave Management**: Apply for leave, approval/rejection workflow with comments
+- **Payroll System**: View and manage salary structures and payroll information
+- **Admin Dashboard**: Comprehensive dashboard for managing employees and system statistics
+- **Responsive Design**: Modern, mobile-friendly user interface
 
-### `npm start`
+## 🛠 Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Frontend
+- **React** - UI library
+- **React Router** - Client-side routing
+- **Axios** - HTTP client for API calls
+- **React Icons** - Icon library
+- **CSS** - Styling
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Backend
+- **Node.js** - Runtime environment
+- **Express.js** - Web framework
+- **MongoDB** - NoSQL database
+- **Mongoose** - ODM for MongoDB
+- **JWT** - Authentication
+- **bcryptjs** - Password hashing
+- **Multer** - File uploads
+- **Nodemailer** - Email services
 
-### `npm test`
+## 📋 Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Before running this application, make sure you have the following installed:
 
-### `npm run build`
+- **Node.js** (v14 or higher) - [Download here](https://nodejs.org/)
+- **MongoDB** - Either:
+  - Local installation: [Download MongoDB](https://www.mongodb.com/try/download/community)
+  - Or MongoDB Atlas account (cloud): [Create account](https://www.mongodb.com/atlas)
+- **npm** or **yarn** package manager (comes with Node.js)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🔧 Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd hrms
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Install root dependencies**
+   ```bash
+   npm install
+   ```
 
-### `npm run eject`
+3. **Setup Backend**
+   ```bash
+   cd backend
+   npm install
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   Create a `.env` file in the `backend` directory:
+   ### For details of .env please contact the HRMS team
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   **Note**: If using MongoDB Atlas, replace `MONGODB_URI` with your Atlas connection string.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. **Setup Frontend**
+   ```bash
+   cd ../frontend
+   npm install
+   ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🚀 Running the Application
 
-## Learn More
+### Option 1: Run both servers simultaneously (Recommended)
+```bash
+# From the root directory
+npm run dev
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Option 2: Run servers separately
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**Terminal 1 - Backend:**
+```bash
+cd backend
+npm run dev
+```
 
-### Code Splitting
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Start MongoDB (if using local installation)
 
-### Analyzing the Bundle Size
+**Windows:**
+```bash
+mongod
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+**macOS/Linux:**
+```bash
+sudo systemctl start mongod
+# or
+mongod
+```
 
-### Making a Progressive Web App
+## 🌐 Accessing the Application
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Backend API**: [http://localhost:5000/api](http://localhost:5000/api)
 
-### Advanced Configuration
+## 📖 Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### First Time Setup
 
-### Deployment
+1. **Sign Up**: Create a new account with:
+   - Employee ID
+   - Email address
+   - Password
+   - Role (Employee/HR/Admin)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+2. **Email Verification**: Check your email for verification (configure email service in production)
 
-### `npm run build` fails to minify
+3. **Sign In**: Login with your credentials
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### User Roles and Permissions
+
+- **Employee**:
+  - View/Edit personal profile
+  - Daily check-in/check-out
+  - Apply for leave
+  - View personal payroll information
+
+- **HR/Admin**:
+  - All employee permissions
+  - Manage employee accounts
+  - Approve/Reject leave requests
+  - View all attendance records
+  - Update payroll information
+  - Access admin dashboard with statistics
+
+### Key Features Usage
+
+#### Attendance Tracking
+- Click "Check In" when starting work
+- Click "Check Out" when ending work
+- View attendance history in weekly/monthly formats
+
+#### Leave Management
+- Navigate to Leave section
+- Click "Apply Leave" and fill the form
+- HR/Admin can approve or reject requests with comments
+
+#### Profile Management
+- Upload profile photo and documents
+- Update personal information
+- View employment details
+
+## 🔌 API Endpoints
+
+### Authentication
+- `POST /api/auth/signup` - User registration
+- `POST /api/auth/signin` - User login
+- `POST /api/auth/verify-email` - Email verification
+
+### User Management
+- `GET /api/profile` - Get user profile
+- `PUT /api/profile` - Update user profile
+
+### Attendance
+- `POST /api/attendance/checkin` - Check in
+- `POST /api/attendance/checkout` - Check out
+- `GET /api/attendance` - Get attendance records
+
+### Leave Management
+- `POST /api/leave/apply` - Apply for leave
+- `GET /api/leave` - Get leave requests
+- `PUT /api/leave/:id/approve` - Approve leave (Admin/HR)
+- `PUT /api/leave/:id/reject` - Reject leave (Admin/HR)
+
+### Admin Routes
+- `GET /api/admin/employees` - Get all employees
+- `POST /api/admin/employee` - Add new employee
+- `PUT /api/admin/employee/:id` - Update employee
+- `DELETE /api/admin/employee/:id` - Delete employee
+
+### Payroll
+- `GET /api/payroll` - Get payroll information
+- `PUT /api/payroll/:id` - Update payroll (Admin/HR)
+
+## 📁 Project Structure
+
+```
+dayflow-hrms/
+├── backend/
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── models/
+│   │   ├── User.js
+│   │   ├── Attendance.js
+│   │   ├── Leave.js
+│   ├── routes/
+│   │   ├── auth.js
+│   │   ├── profile.js
+│   │   ├── attendance.js
+│   │   ├── leave.js
+│   │   ├── payroll.js
+│   │   └── admin.js
+│   ├── utils/
+│   │   ├── generateToken.js
+│   │   └── emailVerification.js
+│   ├── uploads/
+│   ├── .env
+│   ├── package.json
+│   └── server.js
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Layout.js
+│   │   │   └── ProtectedRoute.js
+│   │   ├── pages/
+│   │   │   ├── Dashboard.js
+│   │   │   ├── Profile.js
+│   │   │   ├── Attendance.js
+│   │   │   ├── Leave.js
+│   │   │   ├── Payroll.js
+│   │   │   ├── Admin.js
+│   │   │   ├── SignIn.js
+│   │   │   └── SignUp.js
+│   │   ├── context/
+│   │   │   └── AuthContext.js
+│   │   ├── config/
+│   │   │   └── api.js
+│   │   ├── App.js
+│   │   └── index.js
+│   ├── package.json
+│   └── README.md
+├── package.json
+├── QUICKSTART.md
+└── README.md
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **MongoDB Connection Error**
+   - Ensure MongoDB is running locally or Atlas connection is correct
+   - Check `MONGODB_URI` in `backend/.env`
+
+2. **Port Already in Use**
+   - Change `PORT` in `backend/.env` (e.g., 5001)
+   - Update `FRONTEND_URL` if needed
+
+3. **CORS Errors**
+   - Make sure backend is running before starting frontend
+   - Verify `FRONTEND_URL` in `backend/.env`
+
+4. **File Upload Issues**
+   - Ensure `backend/uploads/` directory exists
+   - Check file size limits (default 5MB)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Support
+
+For support, email pratham3407@gmail.com or create an issue in this repository.
+
+---
+
+**Built with ❤️ by the Dayflow HRMS Team**
