@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import api from '../config/api';
-import Layout from '../components/Layout';
-import './Payroll.css';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import api from "../config/api";
+import Layout from "../components/Layout";
+import "./Payroll.css";
 
 const Payroll = () => {
   const { user } = useAuth();
@@ -11,9 +11,9 @@ const Payroll = () => {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({});
-  const [selectedEmployee, setSelectedEmployee] = useState('');
+  const [selectedEmployee, setSelectedEmployee] = useState("");
 
-  const isAdmin = user?.role === 'Admin' || user?.role === 'HR';
+  const isAdmin = user?.role === "Admin" || user?.role === "HR";
 
   useEffect(() => {
     if (isAdmin) {
@@ -35,7 +35,7 @@ const Payroll = () => {
       setPayroll(response.data);
       setFormData(response.data.salary || {});
     } catch (error) {
-      console.error('Error fetching payroll:', error);
+      console.error("Error fetching payroll:", error);
     } finally {
       setLoading(false);
     }
@@ -43,10 +43,19 @@ const Payroll = () => {
 
   const fetchAllPayrolls = async () => {
     try {
-      const response = await api.get('/payroll');
-      setPayrolls(response.data);
+      const response = await api.get("/payroll");
+
+      // ✅ SAFETY CHECK (VERY IMPORTANT)
+      if (Array.isArray(response.data)) {
+        setPayrolls(response.data);
+      } else if (Array.isArray(response.data.payrolls)) {
+        setPayrolls(response.data.payrolls);
+      } else {
+        setPayrolls([]);
+      }
     } catch (error) {
-      console.error('Error fetching payrolls:', error);
+      console.error("Error fetching payrolls:", error);
+      setPayrolls([]);
     } finally {
       setLoading(false);
     }
@@ -75,9 +84,9 @@ const Payroll = () => {
       } else {
         fetchPayroll();
       }
-      alert('Salary structure updated successfully');
+      alert("Salary structure updated successfully");
     } catch (error) {
-      alert('Error updating salary structure');
+      alert("Error updating salary structure");
     }
   };
 
@@ -112,11 +121,12 @@ const Payroll = () => {
               className="employee-select"
             >
               <option value="">Select Employee</option>
-              {payrolls.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name} ({p.employeeId})
-                </option>
-              ))}
+              {Array.isArray(payrolls) &&
+                payrolls.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} ({p.employeeId})
+                  </option>
+                ))}
             </select>
           )}
         </div>
@@ -138,38 +148,39 @@ const Payroll = () => {
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {payrolls.length === 0 ? (
-                    <tr>
-                      <td colSpan="8" className="no-data">
-                        No payroll records found
-                      </td>
-                    </tr>
-                  ) : (
-                    payrolls.map((p) => (
-                      <tr key={p.id}>
-                        <td>{p.name}</td>
-                        <td>{p.employeeId}</td>
-                        <td>₹{p.salary?.basic || 0}</td>
-                        <td>₹{p.salary?.hra || 0}</td>
-                        <td>₹{p.salary?.allowances || 0}</td>
-                        <td>₹{p.salary?.deductions || 0}</td>
-                        <td>₹{p.salary?.total || 0}</td>
-                        <td>
-                          <button
-                            onClick={() => {
-                              setSelectedEmployee(p.id);
-                              fetchPayroll(p.id);
-                            }}
-                            className="btn-small"
-                          >
-                            View/Edit
-                          </button>
+                    <tbody>
+                    {payrolls.length === 0 ? (
+                      <tr>
+                        <td colSpan="8" className="no-data">
+                          No payroll records found
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
+                    ) : (
+                      Array.isArray(payrolls) &&
+                      payrolls.map((p) => (
+                        <tr key={p.id}>
+                          <td>{p.name}</td>
+                          <td>{p.employeeId}</td>
+                          <td>₹{p.salary?.basic || 0}</td>
+                          <td>₹{p.salary?.hra || 0}</td>
+                          <td>₹{p.salary?.allowances || 0}</td>
+                          <td>₹{p.salary?.deductions || 0}</td>
+                          <td>₹{p.salary?.total || 0}</td>
+                          <td>
+                            <button
+                              onClick={() => {
+                                setSelectedEmployee(p.id);
+                                fetchPayroll(p.id);
+                              }}
+                              className="btn-small"
+                            >
+                              View/Edit
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
               </table>
             </div>
           </div>
@@ -184,7 +195,7 @@ const Payroll = () => {
                   onClick={() => setEditing(!editing)}
                   className="btn-primary"
                 >
-                  {editing ? 'Cancel' : 'Edit Salary'}
+                  {editing ? "Cancel" : "Edit Salary"}
                 </button>
               )}
             </div>
@@ -250,23 +261,33 @@ const Payroll = () => {
                 <div className="salary-breakdown">
                   <div className="salary-item">
                     <span className="salary-label">Basic Salary:</span>
-                    <span className="salary-value">₹{payroll.salary?.basic || 0}</span>
+                    <span className="salary-value">
+                      ₹{payroll.salary?.basic || 0}
+                    </span>
                   </div>
                   <div className="salary-item">
                     <span className="salary-label">HRA:</span>
-                    <span className="salary-value">₹{payroll.salary?.hra || 0}</span>
+                    <span className="salary-value">
+                      ₹{payroll.salary?.hra || 0}
+                    </span>
                   </div>
                   <div className="salary-item">
                     <span className="salary-label">Allowances:</span>
-                    <span className="salary-value">₹{payroll.salary?.allowances || 0}</span>
+                    <span className="salary-value">
+                      ₹{payroll.salary?.allowances || 0}
+                    </span>
                   </div>
                   <div className="salary-item">
                     <span className="salary-label">Deductions:</span>
-                    <span className="salary-value">₹{payroll.salary?.deductions || 0}</span>
+                    <span className="salary-value">
+                      ₹{payroll.salary?.deductions || 0}
+                    </span>
                   </div>
                   <div className="salary-item total">
                     <span className="salary-label">Total Salary:</span>
-                    <span className="salary-value">₹{payroll.salary?.total || 0}</span>
+                    <span className="salary-value">
+                      ₹{payroll.salary?.total || 0}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -281,4 +302,3 @@ const Payroll = () => {
 };
 
 export default Payroll;
-
