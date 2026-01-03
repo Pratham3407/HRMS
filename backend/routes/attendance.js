@@ -102,17 +102,15 @@ router.get('/', auth, async (req, res) => {
     const { employeeId, startDate, endDate, view } = req.query;
     
     let query = {};
-    let targetEmployeeId = req.user._id;
 
-    // Admin/HR can view any employee's attendance
-    if ((req.user.role === 'Admin' || req.user.role === 'HR') && employeeId) {
-      targetEmployeeId = employeeId;
-    } else if (req.user.role === 'Employee') {
-      // Employees can only view their own attendance
-      targetEmployeeId = req.user._id;
+    // Employees can only view their own attendance
+    if (req.user.role === 'Employee') {
+      query.employeeId = req.user._id;
+    } else if ((req.user.role === 'Admin' || req.user.role === 'HR') && employeeId) {
+      // Admin/HR can view specific employee's attendance
+      query.employeeId = employeeId;
     }
-
-    query.employeeId = targetEmployeeId;
+    // If Admin/HR and no employeeId specified, fetch all employees' attendance
 
     // Date range filtering
     if (startDate && endDate) {
