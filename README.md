@@ -1,253 +1,70 @@
-# Dayflow - Human Resource Management System (HRMS)
+# Getting Started with Create React App
 
-A complete full-stack MERN (MongoDB, Express, React, Node.js) application for managing human resources, including employee profiles, attendance tracking, leave management, and payroll.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Features
+## Available Scripts
 
-### Authentication & Authorization
-- User registration (Sign Up) with Employee ID, Email, Password, and Role
-- User login (Sign In) with email and password
-- Email verification (token-based)
-- JWT-based authentication
-- Role-based access control (Admin/HR, Employee)
+In the project directory, you can run:
 
-### Employee Dashboard
-- Quick access cards for Profile, Attendance, Leave Requests, and Payroll
-- Recent activity and alerts
-- Pending leave requests notification
+### `npm start`
 
-### Admin/HR Dashboard
-- Employee list management
-- Attendance records overview
-- Leave approval queue
-- Dashboard statistics (total employees, pending leaves, today's attendance)
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### Employee Profile Management
-- View personal details, job details, salary structure, documents, and profile picture
-- Edit limited fields (address, phone, profile picture) for employees
-- Admin can edit all employee details
-- Upload profile pictures and documents
-- Delete documents
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-### Attendance Management
-- Daily check-in/check-out functionality
-- Daily and weekly attendance views
-- Attendance status tracking (Present, Absent, Half-day, Leave)
-- Working hours calculation
-- Employees can view only their own attendance
-- Admin/HR can view attendance of all employees
-- Admin can update attendance records
+### `npm test`
 
-### Leave & Time-Off Management
-- Apply for leave (Paid, Sick, Unpaid)
-- Select date range and add remarks
-- Leave request status tracking (Pending, Approved, Rejected)
-- Admin/HR can approve or reject leave requests
-- Admin can add comments on leave requests
-- Automatic attendance update when leave is approved
-- Overlapping leave request prevention
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### Payroll/Salary Management
-- View salary structure (Basic, HRA, Allowances, Deductions, Total)
-- Employees can view only their own payroll (read-only)
-- Admin/HR can view payroll of all employees
-- Admin can update salary structure
-- Automatic total salary calculation
+### `npm run build`
 
-## Technology Stack
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-### Backend
-- Node.js
-- Express.js
-- MongoDB with Mongoose
-- JWT for authentication
-- bcryptjs for password hashing
-- Multer for file uploads
-- Express Validator for input validation
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-### Frontend
-- React.js
-- React Router for routing
-- Axios for API calls
-- Context API for state management
-- CSS3 for styling
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Installation & Setup
+### `npm run eject`
 
-### Prerequisites
-- Node.js (v14 or higher)
-- MongoDB (local or MongoDB Atlas)
-- npm or yarn
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-### Backend Setup
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-1. Navigate to the backend directory:
-```bash
-cd backend
-```
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-2. Install dependencies:
-```bash
-npm install
-```
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-3. Create a `.env` file in the backend directory:
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/dayflow-hrms
-JWT_SECRET=your_jwt_secret_key_here_change_in_production
-JWT_EXPIRE=7d
-NODE_ENV=development
-FRONTEND_URL=http://localhost:3000
-```
+## Learn More
 
-4. Start the backend server:
-```bash
-npm run dev
-```
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-The backend server will run on `http://localhost:5000`
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Frontend Setup
+### Code Splitting
 
-1. Navigate to the frontend directory:
-```bash
-cd frontend
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-2. Install dependencies:
-```bash
-npm install
-```
+### Analyzing the Bundle Size
 
-3. Create a `.env` file in the frontend directory (optional):
-```env
-REACT_APP_API_URL=http://localhost:5000/api
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-4. Start the frontend development server:
-```bash
-npm start
-```
+### Making a Progressive Web App
 
-The frontend will run on `http://localhost:3000`
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Running Both Servers
+### Advanced Configuration
 
-From the root directory, you can run both servers concurrently:
-```bash
-npm run dev
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-## Project Structure
+### Deployment
 
-```
-HRMS/
-├── backend/
-│   ├── models/
-│   │   ├── User.js
-│   │   ├── Attendance.js
-│   │   └── Leave.js
-│   ├── routes/
-│   │   ├── auth.js
-│   │   ├── profile.js
-│   │   ├── attendance.js
-│   │   ├── leave.js
-│   │   ├── payroll.js
-│   │   └── admin.js
-│   ├── middleware/
-│   │   └── auth.js
-│   ├── utils/
-│   │   ├── generateToken.js
-│   │   └── emailVerification.js
-│   ├── uploads/
-│   ├── server.js
-│   └── package.json
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Layout.js
-│   │   │   └── ProtectedRoute.js
-│   │   ├── pages/
-│   │   │   ├── SignIn.js
-│   │   │   ├── SignUp.js
-│   │   │   ├── Dashboard.js
-│   │   │   ├── Profile.js
-│   │   │   ├── Attendance.js
-│   │   │   ├── Leave.js
-│   │   │   ├── LeaveDetail.js
-│   │   │   ├── Payroll.js
-│   │   │   └── Admin.js
-│   │   ├── context/
-│   │   │   └── AuthContext.js
-│   │   ├── config/
-│   │   │   └── api.js
-│   │   ├── App.js
-│   │   └── index.js
-│   └── package.json
-└── README.md
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-## API Endpoints
+### `npm run build` fails to minify
 
-### Authentication
-- `POST /api/auth/signup` - User registration
-- `POST /api/auth/signin` - User login
-- `GET /api/auth/verify-email/:token` - Email verification
-- `GET /api/auth/me` - Get current user
-
-### Profile
-- `GET /api/profile/:id` - Get profile
-- `PUT /api/profile/:id` - Update profile
-- `DELETE /api/profile/documents/:documentId` - Delete document
-
-### Attendance
-- `POST /api/attendance/checkin` - Check in
-- `POST /api/attendance/checkout` - Check out
-- `GET /api/attendance/today` - Get today's attendance
-- `GET /api/attendance` - Get attendance records
-- `PUT /api/attendance/:id` - Update attendance (Admin only)
-
-### Leave
-- `POST /api/leave/apply` - Apply for leave
-- `GET /api/leave/my-leaves` - Get my leave requests
-- `GET /api/leave` - Get all leave requests (Admin only)
-- `GET /api/leave/:id` - Get leave by ID
-- `PUT /api/leave/:id/approve` - Approve/Reject leave (Admin only)
-
-### Payroll
-- `GET /api/payroll/:id` - Get payroll
-- `GET /api/payroll` - Get all payrolls (Admin only)
-- `PUT /api/payroll/:id` - Update salary (Admin only)
-
-### Admin
-- `GET /api/admin/employees` - Get all employees
-- `GET /api/admin/dashboard-stats` - Get dashboard statistics
-
-## Usage
-
-1. Start MongoDB (if running locally)
-2. Start the backend server
-3. Start the frontend development server
-4. Open `http://localhost:3000` in your browser
-5. Sign up for a new account or sign in with existing credentials
-6. Explore the features based on your role (Employee or Admin/HR)
-
-## Notes
-
-- Email verification is currently set up but uses console logging for development. Configure nodemailer in `backend/utils/emailVerification.js` for production use.
-- The application uses JWT tokens stored in localStorage for authentication.
-- File uploads are stored in `backend/uploads/` directory.
-- Make sure MongoDB is running before starting the backend server.
-
-## Future Enhancements
-
-As mentioned in the requirements document, future enhancements could include:
-- Email & notification alerts
-- Analytics & reports dashboard (salary slips, attendance reports)
-- Additional features as needed
-
-## License
-
-This project is created for hackathon purposes.
-
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
