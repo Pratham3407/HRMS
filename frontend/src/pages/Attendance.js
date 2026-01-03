@@ -13,7 +13,7 @@ const Attendance = () => {
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [employees, setEmployees] = useState([]);
 
-  const isAdmin = user?.role === 'Admin' || user?.role === 'HR';
+  const isAdmin = ['admin', 'hr', 'Admin', 'HR', 'HR Officer'].includes(user?.role);
 
   useEffect(() => {
     fetchTodayAttendance();
@@ -21,7 +21,7 @@ const Attendance = () => {
     if (isAdmin) {
       fetchEmployees();
     }
-  }, [view, selectedEmployee]);
+  }, [view, selectedEmployee, isAdmin]); // ✅ FIX APPLIED HERE
 
   const fetchEmployees = async () => {
     try {
@@ -134,7 +134,8 @@ const Attendance = () => {
                 </button>
               )}
               <p className="status-badge-main">
-                Status: <span className={getStatusClass(todayAttendance?.status || 'Absent')}>
+                Status:{' '}
+                <span className={getStatusClass(todayAttendance?.status || 'Absent')}>
                   {todayAttendance?.status || 'Absent'}
                 </span>
               </p>
@@ -230,4 +231,3 @@ const Attendance = () => {
 };
 
 export default Attendance;
-
