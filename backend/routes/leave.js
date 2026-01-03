@@ -3,6 +3,8 @@ const router = express.Router();
 const { auth, isAdmin } = require('../middleware/auth');
 const Leave = require('../models/Leave');
 const Attendance = require('../models/Attendance');
+const User = require('../models/User');
+const { sendEmail } = require('../utils/emailVerification');
 
 // Apply for Leave
 router.post('/apply', auth, async (req, res) => {
@@ -54,6 +56,25 @@ router.post('/apply', auth, async (req, res) => {
 
     await leave.save();
     await leave.populate('employeeId', 'employeeId email profile.firstName profile.lastName');
+
+    // Send email to HR/Admins
+    const admins = await User.find({ role: { $in: ['Admin', 'HR'] } }, 'email');
+    const adminEmails = admins.map(admin => admin.email);
+    
+    if (adminEmails.length > 0) {
+      const subject = 'New Leave Request Submitted - Dayflow HRMS';
+      const html = `
+        <h2>New Leave Request</h2>
+        <p><strong>Employee:</strong> ${leave.employeeId.profile.firstName} ${leave.employeeId.profile.lastName} (${leave.employeeId.employeeId})</p>
+        <p><strong>Leave Type:</strong> ${leave.leaveType}</p>
+        <p><strong>Date Range:</strong> ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()}</p>
+        <p><strong>Total Days:</strong> ${leave.totalDays}</p>
+        <p><strong>Remarks:</strong> ${leave.remarks || 'None'}</p>
+        <p>Please review and approve/reject the request in the HRMS dashboard.</p>
+      `;
+      
+      await sendEmail(adminEmails.join(','), subject, html);
+    }
 
     res.status(201).json({ message: 'Leave request submitted successfully', leave });
   } catch (error) {
@@ -171,6 +192,21 @@ router.put('/:id/approve', auth, isAdmin, async (req, res) => {
 
     await leave.populate('employeeId', 'employeeId email profile.firstName profile.lastName');
     await leave.populate('approvedBy', 'employeeId email profile.firstName profile.lastName');
+
+    // Send email to employee
+    const employeeEmail = leave.employeeId.email;
+    const subject = `Leave Request ${status} - Dayflow HRMS`;
+    const html = `
+      <h2>Leave Request Update</h2>
+      <p>Your leave request has been <strong>${status.toLowerCase()}</strong>.</p>
+      <p><strong>Leave Type:</strong> ${leave.leaveType}</p>
+      <p><strong>Date Range:</strong> ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()}</p>
+      <p><strong>Total Days:</strong> ${leave.totalDays}</p>
+      ${leave.adminComments ? `<p><strong>HR Comments:</strong> ${leave.adminComments}</p>` : ''}
+      <p>Approved by: ${leave.approvedBy.profile.firstName} ${leave.approvedBy.profile.lastName}</p>
+    `;
+    
+    await sendEmail(employeeEmail, subject, html);
 
     res.json({ message: `Leave request ${status.toLowerCase()} successfully`, leave });
   } catch (error) {
