@@ -19,7 +19,7 @@ const Profile = () => {
   const isAdmin = user?.role === 'Admin' || user?.role === 'HR';
   const isOwnProfile = profileId === user?._id?.toString();
 
-  useEffect(() => {
+  useEffect(() => { 
     if (profileId) {
       fetchProfile();
     }
@@ -124,10 +124,10 @@ const Profile = () => {
         <div className="profile-header">
           <h1>Profile {!isOwnProfile && `- ${profile?.profile?.firstName} ${profile?.profile?.lastName}`}</h1>
           {!editing && (isOwnProfile || isAdmin) && (
-            <button onClick={() => setEditing(true)} className="btn-primary">
+            <button onClick={() => setEditing(true)} className="btn-edit-profile">
               Edit Profile
             </button>
-          )}
+          )}  
         </div>
 
         <div className="profile-content">

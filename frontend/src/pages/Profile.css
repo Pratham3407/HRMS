@@ -7,15 +7,33 @@
 
 .profile-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  justify-content: space-between;
+  margin-bottom: 24px;
 }
 
 .profile-header h1 {
-  color: #333;
   margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
 }
+.btn-edit-profile {
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid #667eea;
+  background: transparent;
+  color: #667eea;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-edit-profile:hover {
+  background: #667eea;
+  color: #fff;
+}
+
 
 .profile-content {
   display: grid;
