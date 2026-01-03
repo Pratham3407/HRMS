@@ -9,6 +9,8 @@ const { generateVerificationToken, sendVerificationEmail } = require('../utils/e
 // Sign Up
 router.post('/signup', [
   body('employeeId').trim().notEmpty().withMessage('Employee ID is required'),
+  body('firstName').trim().notEmpty().withMessage('First name is required'),
+  body('lastName').trim().notEmpty().withMessage('Last name is required'),
   body('email').isEmail().withMessage('Please enter a valid email'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
   body('role').isIn(['Employee', 'HR', 'Admin']).withMessage('Invalid role')
@@ -19,7 +21,7 @@ router.post('/signup', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { employeeId, email, password, role } = req.body;
+    const { employeeId, firstName, lastName, email, password, role } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ $or: [{ email }, { employeeId }] });
@@ -36,7 +38,11 @@ router.post('/signup', [
       email,
       password,
       role: role || 'Employee',
-      emailVerificationToken
+      emailVerificationToken,
+      profile: {
+        firstName,
+        lastName
+      }
     });
 
     await user.save();

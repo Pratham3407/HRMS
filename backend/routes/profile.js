@@ -40,7 +40,12 @@ const upload = multer({
 // Get Profile
 router.get('/:id?', auth, async (req, res) => {
   try {
-    const profileId = req.params.id || req.user._id;
+    const profileId = req.params.id || req.user._id.toString();
+    
+    // Validate profileId
+    if (!profileId || profileId === 'undefined' || profileId === 'null') {
+      return res.status(400).json({ message: 'Invalid profile ID' });
+    }
     
     // Employees can only view their own profile, Admin/HR can view any
     if (req.user.role === 'Employee' && profileId !== req.user._id.toString()) {

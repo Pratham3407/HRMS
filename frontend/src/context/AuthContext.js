@@ -53,28 +53,30 @@ export const AuthProvider = ({ children }) => {
       };
     }
   };
+const signup = async (employeeId, firstName, lastName, email, password, role) => {
+  try {
+    const response = await api.post('/auth/signup', {
+      employeeId,
+      firstName,
+      lastName,
+      email,
+      password,
+      role,
+    });
 
-  const signup = async (employeeId, email, password, role) => {
-    try {
-      const response = await api.post('/auth/signup', {
-        employeeId,
-        email,
-        password,
-        role,
-      });
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      setUser(user);
-      return { success: true, data: response.data };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Signup failed',
-        errors: error.response?.data?.errors,
-      };
-    }
-  };
+    // ❌ DO NOT store token or user here
+    // ❌ DO NOT setUser here
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || 'Signup failed',
+      errors: error.response?.data?.errors,
+    };
+  }
+};
+
 
   const logout = () => {
     localStorage.removeItem('token');

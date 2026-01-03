@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { FaEnvelope, FaLock } from 'react-icons/fa';
 import './Auth.css';
 
 const SignIn = () => {
@@ -39,22 +40,24 @@ const SignIn = () => {
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Email</label>
+            <label><FaEnvelope className="field-icon" /> Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
+              placeholder="your.email@company.com"
               required
             />
           </div>
           <div className="form-group">
-            <label>Password</label>
+            <label><FaLock className="field-icon" /> Password</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
+              placeholder="Enter your password"
               required
             />
           </div>
@@ -63,7 +66,7 @@ const SignIn = () => {
           </button>
         </form>
         <p className="auth-link">
-          Don't have an account? <Link to="/signup">Sign Up</Link>
+          Don't have an account? <Link to="/signup" className="link-button">Sign Up</Link>
         </p>
       </div>
     </div>

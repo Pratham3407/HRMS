@@ -94,14 +94,18 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route path="/" element={<Navigate to="/dashboard" />} />
+     <Route
+      path="/"
+      element={user ? <Navigate to="/dashboard" /> : <Navigate to="/signin" />}
+/>
+
     </Routes>
   );
 }
 
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
         <AppRoutes />
       </AuthProvider>

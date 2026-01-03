@@ -15,16 +15,24 @@ const Profile = () => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [documents, setDocuments] = useState([]);
 
-  const profileId = id || user?._id;
+  const profileId = id || (user?._id ? user._id.toString() : null);
   const isAdmin = user?.role === 'Admin' || user?.role === 'HR';
-  const isOwnProfile = profileId === user?._id;
+  const isOwnProfile = profileId === user?._id?.toString();
 
   useEffect(() => {
-    fetchProfile();
-  }, [profileId]);
+    if (profileId) {
+      fetchProfile();
+    }
+  }, [profileId, user]);
 
   const fetchProfile = async () => {
+    if (!profileId) {
+      setLoading(false);
+      return;
+    }
+    
     try {
+      setLoading(true);
       const response = await api.get(`/profile/${profileId}`);
       setProfile(response.data);
       setFormData({

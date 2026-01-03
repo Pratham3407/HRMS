@@ -3,106 +3,378 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
   padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: float 20s ease-in-out infinite;
+
+  /* FIX */
+  pointer-events: none;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+  50% { transform: translate(-50%, -50%) rotate(180deg); }
 }
 
 .auth-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
   padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   width: 100%;
-  max-width: 450px;
+  max-width: 480px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: cardFadeIn 0.6s ease-out;
+
+  /* FIX */
+  z-index: 10;
 }
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+
+  /* FIX */
+  pointer-events: none;
+}
+
+.auth-card::after {
+  content: '';
+  position: absolute;
+  bottom: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+  border-radius: 50%;
+
+  /* FIX */
+  pointer-events: none;
+}
+
+/* ---------- rest of your CSS is unchanged ---------- */
 
 .auth-card h1 {
   text-align: center;
   color: #667eea;
   margin-bottom: 10px;
-  font-size: 2rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+.auth-card h1::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+  border-radius: 2px;
 }
 
 .auth-card h2 {
   text-align: center;
   color: #333;
   margin-bottom: 30px;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 500;
+  opacity: 0.8;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-group.half {
+  flex: 1;
 }
 
 .form-group label {
-  display: block;
+  display: flex;
+  align-items: center;
   margin-bottom: 8px;
   color: #555;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.field-icon {
+  margin-right: 8px;
+  color: #667eea;
+  font-size: 16px;
 }
 
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 14px 16px 14px 44px;
+  border: 2px solid #e1e5e9;
+  border-radius: 12px;
   font-size: 16px;
-  transition: border-color 0.3s;
+  transition: all 0.3s ease;
   box-sizing: border-box;
+  background-color: #fafbfc;
+  position: relative;
+  animation: inputSlideIn 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.form-group:nth-child(1) input,
+.form-group:nth-child(1) select { animation-delay: 0.1s; }
+.form-group:nth-child(2) input,
+.form-group:nth-child(2) select { animation-delay: 0.2s; }
+.form-group:nth-child(3) input,
+.form-group:nth-child(3) select { animation-delay: 0.3s; }
+.form-group:nth-child(4) input,
+.form-group:nth-child(4) select { animation-delay: 0.4s; }
+.form-group:nth-child(5) input,
+.form-group:nth-child(5) select { animation-delay: 0.5s; }
+.form-group:nth-child(6) input,
+.form-group:nth-child(6) select { animation-delay: 0.6s; }
+
+@keyframes inputSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
   border-color: #667eea;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  transform: translateY(-1px);
 }
 
 .btn-primary {
   width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-primary:hover:not(:disabled)::before {
+  left: 100%;
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
 }
 
 .btn-primary:disabled {
-  opacity: 0.6;
+  opacity: 0.7;
   cursor: not-allowed;
+  transform: none;
+  position: relative;
+}
+
+.btn-primary:disabled::before {
+  display: none;
+}
+
+.btn-primary:disabled::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: button-loading-spinner 1s ease infinite;
+}
+
+@keyframes button-loading-spinner {
+  from { transform: rotate(0turn); }
+  to { transform: rotate(1turn); }
 }
 
 .error-message {
-  background: #fee;
-  color: #c33;
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  border: 1px solid #fcc;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  color: #721c24;
+  padding: 16px 18px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  border: 1px solid #f5c6cb;
+  font-weight: 500;
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .auth-link {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 24px;
   color: #666;
+  font-size: 14px;
 }
 
 .auth-link a {
   color: #667eea;
   text-decoration: none;
   font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.auth-link a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s ease;
+}
+
+.auth-link a:hover::after {
+  width: 100%;
 }
 
 .auth-link a:hover {
-  text-decoration: underline;
+  color: #764ba2;
+}
+
+.link-button {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.link-button::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s ease;
+}
+
+.link-button:hover::after {
+  width: 100%;
+}
+
+.link-button:hover {
+  color: #764ba2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 10px;
+  }
+  
+  .auth-card {
+    padding: 30px 20px;
+    max-width: 100%;
+    margin: 0 10px;
+  }
+  
+  .auth-card h1 {
+    font-size: 2rem;
+  }
+  
+  .auth-card h2 {
+    font-size: 1.5rem;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .form-group.half {
+    flex: none;
+  }
 }
 
