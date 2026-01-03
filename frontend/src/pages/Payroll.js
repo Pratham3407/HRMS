@@ -1,41 +1,46 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
-import api from "../config/api";
-import Layout from "../components/Layout";
-import "./Payroll.css";
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import api from '../config/api';
+import Layout from '../components/Layout';
+import './Payroll.css';
 
 const Payroll = () => {
   const { user } = useAuth();
   const [payroll, setPayroll] = useState(null);
   const [payrolls, setPayrolls] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({});
-  const [selectedEmployee, setSelectedEmployee] = useState("");
+  const [selectedEmployee, setSelectedEmployee] = useState('');
 
-  const isAdmin = user?.role === "Admin" || user?.role === "HR";
+  const isAdmin = user?.role === 'Admin' || user?.role === 'HR';
 
   useEffect(() => {
     if (isAdmin) {
       fetchAllPayrolls();
     } else {
-      fetchPayroll();
+      fetchPayroll(user?._id);
     }
-  }, []);
+  }, [isAdmin, user?._id]);
 
   useEffect(() => {
     if (isAdmin && selectedEmployee) {
       fetchPayroll(selectedEmployee);
     }
-  }, [selectedEmployee]);
+  }, [selectedEmployee, isAdmin]);
 
-  const fetchPayroll = async (employeeId = user?._id) => {
+  const fetchPayroll = async (employeeId) => {
     try {
+      setError('');
+      setLoading(true);
       const response = await api.get(`/payroll/${employeeId}`);
       setPayroll(response.data);
-      setFormData(response.data.salary || {});
+      setFormData(response.data.salary || { basic: 0, hra: 0, allowances: 0, deductions: 0 });
     } catch (error) {
-      console.error("Error fetching payroll:", error);
+      console.error('Error fetching payroll:', error);
+      setError(error.response?.data?.message || 'Error fetching payroll data');
+      setPayroll(null);
     } finally {
       setLoading(false);
     }
@@ -43,18 +48,13 @@ const Payroll = () => {
 
   const fetchAllPayrolls = async () => {
     try {
-      const response = await api.get("/payroll");
-
-      // ✅ SAFETY CHECK (VERY IMPORTANT)
-      if (Array.isArray(response.data)) {
-        setPayrolls(response.data);
-      } else if (Array.isArray(response.data.payrolls)) {
-        setPayrolls(response.data.payrolls);
-      } else {
-        setPayrolls([]);
-      }
+      setError('');
+      setLoading(true);
+      const response = await api.get('/payroll');
+      setPayrolls(response.data);
     } catch (error) {
-      console.error("Error fetching payrolls:", error);
+      console.error('Error fetching payrolls:', error);
+      setError(error.response?.data?.message || 'Error fetching payroll data');
       setPayrolls([]);
     } finally {
       setLoading(false);
@@ -72,7 +72,9 @@ const Payroll = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.put(`/payroll/${selectedEmployee || user?._id}`, {
+      setError('');
+      const employeeId = selectedEmployee || user?._id;
+      await api.put(`/payroll/${employeeId}`, {
         salary: formData,
       });
       setEditing(false);
@@ -82,11 +84,13 @@ const Payroll = () => {
           fetchPayroll(selectedEmployee);
         }
       } else {
-        fetchPayroll();
+        fetchPayroll(user?._id);
       }
-      alert("Salary structure updated successfully");
+      alert('Salary structure updated successfully');
     } catch (error) {
-      alert("Error updating salary structure");
+      const errorMsg = error.response?.data?.message || 'Error updating salary structure';
+      setError(errorMsg);
+      alert(`Error: ${errorMsg}`);
     }
   };
 
@@ -101,7 +105,9 @@ const Payroll = () => {
   if (loading) {
     return (
       <Layout>
-        <div>Loading...</div>
+        <div className="loading-container">
+          <p>Loading payroll data...</p>
+        </div>
       </Layout>
     );
   }
@@ -120,16 +126,17 @@ const Payroll = () => {
               }}
               className="employee-select"
             >
-              <option value="">Select Employee</option>
-              {Array.isArray(payrolls) &&
-                payrolls.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name} ({p.employeeId})
-                  </option>
-                ))}
+              <option value="">Select Employee to View/Edit</option>
+              {payrolls.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name} ({p.employeeId})
+                </option>
+              ))}
             </select>
           )}
         </div>
+
+        {error && <div className="error-message">{error}</div>}
 
         {isAdmin && !selectedEmployee ? (
           <div className="payrolls-list">
@@ -148,39 +155,38 @@ const Payroll = () => {
                     <th>Action</th>
                   </tr>
                 </thead>
-                    <tbody>
-                    {payrolls.length === 0 ? (
-                      <tr>
-                        <td colSpan="8" className="no-data">
-                          No payroll records found
+                <tbody>
+                  {payrolls.length === 0 ? (
+                    <tr>
+                      <td colSpan="8" className="no-data">
+                        No payroll records found
+                      </td>
+                    </tr>
+                  ) : (
+                    payrolls.map((p) => (
+                      <tr key={p.id}>
+                        <td>{p.name}</td>
+                        <td>{p.employeeId}</td>
+                        <td>₹{(p.salary?.basic || 0).toLocaleString('en-IN')}</td>
+                        <td>₹{(p.salary?.hra || 0).toLocaleString('en-IN')}</td>
+                        <td>₹{(p.salary?.allowances || 0).toLocaleString('en-IN')}</td>
+                        <td>₹{(p.salary?.deductions || 0).toLocaleString('en-IN')}</td>
+                        <td className="total-cell">₹{(p.salary?.total || 0).toLocaleString('en-IN')}</td>
+                        <td>
+                          <button
+                            onClick={() => {
+                              setSelectedEmployee(p.id);
+                              fetchPayroll(p.id);
+                            }}
+                            className="btn-small"
+                          >
+                            View/Edit
+                          </button>
                         </td>
                       </tr>
-                    ) : (
-                      Array.isArray(payrolls) &&
-                      payrolls.map((p) => (
-                        <tr key={p.id}>
-                          <td>{p.name}</td>
-                          <td>{p.employeeId}</td>
-                          <td>₹{p.salary?.basic || 0}</td>
-                          <td>₹{p.salary?.hra || 0}</td>
-                          <td>₹{p.salary?.allowances || 0}</td>
-                          <td>₹{p.salary?.deductions || 0}</td>
-                          <td>₹{p.salary?.total || 0}</td>
-                          <td>
-                            <button
-                              onClick={() => {
-                                setSelectedEmployee(p.id);
-                                fetchPayroll(p.id);
-                              }}
-                              className="btn-small"
-                            >
-                              View/Edit
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
+                    ))
+                  )}
+                </tbody>
               </table>
             </div>
           </div>
@@ -195,9 +201,10 @@ const Payroll = () => {
                   onClick={() => setEditing(!editing)}
                   className="btn-primary"
                 >
-                  {editing ? "Cancel" : "Edit Salary"}
+                  {editing ? 'Cancel' : 'Edit Salary'}
                 </button>
               )}
+              {!isAdmin && <span className="read-only-badge">Read-Only</span>}
             </div>
 
             {editing ? (
@@ -212,6 +219,8 @@ const Payroll = () => {
                         name="basic"
                         value={formData.basic || 0}
                         onChange={handleChange}
+                        min="0"
+                        step="0.01"
                         required
                       />
                     </div>
@@ -222,6 +231,8 @@ const Payroll = () => {
                         name="hra"
                         value={formData.hra || 0}
                         onChange={handleChange}
+                        min="0"
+                        step="0.01"
                         required
                       />
                     </div>
@@ -234,6 +245,8 @@ const Payroll = () => {
                         name="allowances"
                         value={formData.allowances || 0}
                         onChange={handleChange}
+                        min="0"
+                        step="0.01"
                         required
                       />
                     </div>
@@ -244,12 +257,14 @@ const Payroll = () => {
                         name="deductions"
                         value={formData.deductions || 0}
                         onChange={handleChange}
+                        min="0"
+                        step="0.01"
                         required
                       />
                     </div>
                   </div>
                   <div className="total-display">
-                    <strong>Total Salary: ₹{calculateTotal()}</strong>
+                    <strong>Total Salary: ₹{calculateTotal().toLocaleString('en-IN', { maximumFractionDigits: 2 })}</strong>
                   </div>
                 </div>
                 <button type="submit" className="btn-primary">
@@ -261,40 +276,32 @@ const Payroll = () => {
                 <div className="salary-breakdown">
                   <div className="salary-item">
                     <span className="salary-label">Basic Salary:</span>
-                    <span className="salary-value">
-                      ₹{payroll.salary?.basic || 0}
-                    </span>
+                    <span className="salary-value">₹{(payroll.salary?.basic || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
                   </div>
                   <div className="salary-item">
                     <span className="salary-label">HRA:</span>
-                    <span className="salary-value">
-                      ₹{payroll.salary?.hra || 0}
-                    </span>
+                    <span className="salary-value">₹{(payroll.salary?.hra || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
                   </div>
                   <div className="salary-item">
                     <span className="salary-label">Allowances:</span>
-                    <span className="salary-value">
-                      ₹{payroll.salary?.allowances || 0}
-                    </span>
+                    <span className="salary-value">₹{(payroll.salary?.allowances || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
                   </div>
                   <div className="salary-item">
                     <span className="salary-label">Deductions:</span>
-                    <span className="salary-value">
-                      ₹{payroll.salary?.deductions || 0}
-                    </span>
+                    <span className="salary-value">₹{(payroll.salary?.deductions || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
                   </div>
                   <div className="salary-item total">
                     <span className="salary-label">Total Salary:</span>
-                    <span className="salary-value">
-                      ₹{payroll.salary?.total || 0}
-                    </span>
+                    <span className="salary-value">₹{(payroll.salary?.total || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
                   </div>
                 </div>
               </div>
             )}
           </div>
         ) : (
-          <div>No payroll data available</div>
+          <div className="no-data-container">
+            <p>No payroll data available</p>
+          </div>
         )}
       </div>
     </Layout>
@@ -302,3 +309,4 @@ const Payroll = () => {
 };
 
 export default Payroll;
+

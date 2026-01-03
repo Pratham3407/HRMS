@@ -75,11 +75,43 @@
   align-items: center;
   padding-bottom: 1rem;
   border-bottom: 2px solid #667eea;
+  gap: 1rem;
 }
 
 .payroll-info-header h2 {
   color: #333;
   margin: 0;
+}
+
+.read-only-badge {
+  background: #ffc107;
+  color: #333;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #f5c6cb;
+}
+
+.loading-container,
+.no-data-container {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.total-cell {
+  font-weight: 600;
+  color: #667eea;
 }
 
 .salary-form {
